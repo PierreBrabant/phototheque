@@ -6,17 +6,17 @@ const albumController = require('../controllers/album.controller')
 //Route pour l'affichage des albums
 router.get('/albums',albumController.albums);
 //Route pour la page d'erreur
-router.get('/pageerror',albumController.error)
+router.get('/pageerror',albumController.error);
 //Route pour récuperer l'id de l'album
 router.get('/albums/:id',albumController.album);
 //Route pour envoyer l'image dans la BDD
 router.post('/albums/:id',albumController.addImageToAlbum);
 //Affichage du formulaire de crréation des albums
-router.get('/albums/create',albumController.createAlbumForm);
+router.get('/albumsCreate',albumController.createAlbumForm);
 //Envoie du formulaire dans la BDD
-router.post('/albums/create',albumController.createAlbum)
+router.post('/albumsCreates',albumController.createAlbum);
 //Supprimer une image 
-router.post('/albums/delete/:id',albumController.deleteImageToAlbum)
+router.post('/albums/delete/:id',albumController.deleteImageToAlbum);
 
 
 module.exports=router;

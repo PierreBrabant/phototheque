@@ -17,7 +17,8 @@ app.use(fileUpload());
 //Configuration EJS
 app.set('view engine','ejs');
 app.set('views',path.join(__dirname,'views'));//Mise en place du views
-app.use(express.static('public'));//Mise en place du 
+app.use(express.static('public'));//Mise en place du dossier public
+
 
 //Page d'accueil
 app.get('/',(req,res)=>{

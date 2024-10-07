@@ -10,7 +10,34 @@ const albums = async (req,res)=>{
         albums,//Les données de l'album
         //Permet de retourner une erreur en cas de probleme
     });
-}
+}//Création d'un nouvel album et gestion des erreurs 
+const createAlbum =async (req,res)=>{
+    try{
+        if(!req.body.albumTitle){//Verification si l'user à mis un nom d'album
+            req.flash('error','mets un titre ou je te monte en l\'aire');//Affichage du message d'erreur
+            res.redirect('/albumsCreate');//Redirection vers l'espace de création de l'album
+            return;
+        }
+    await Album.create({//Si un nom à été mis sauvegarde du nom de l'album
+        title:req.body.albumTitle//Envoie a la bdd le nom de l'album
+    });
+
+    res.redirect('/albums');//Redirection vers les albums
+    }catch(err){//Gestion des erreur autres
+        req.flash('error','Erreur lors de la création de l\'album')
+        res.redirect('/albums/create');
+
+    };
+};
+//Gestion de la page de création de formulaire
+const createAlbumForm = (req,res)=>{
+    
+    res.render('new-album',//Nommage de la route
+        {title: "Nouvel Album",//Title de l'html
+         error: req.flash('error'),//Affichage en cas d'erreur
+        });
+    
+};
 //Ajout d'une image dans l'album
 const addImageToAlbum = async (req,res)=>{
     const idAlbum = req.params.id;//Récuperation de l'id de l'album
@@ -63,44 +90,19 @@ const deleteImageToAlbum = async (req,res)=>{
 const error = (req,res)=>{
     res.render('pageerror',{title:"Erreur 404"});//Mise ne place de la page d'erreur
 };
-//Création d'un nouvel album et gestion des erreurs 
-const createAlbum =async (req,res)=>{
-    try{
-        if(!req.body.albumTitle){//Verification si l'user à mis un nom d'album
-            req.flash('error','mets un titre ou je te monte en l\'aire');//Affichage du message d'erreur
-            res.redirect('/albums/create');//Redirection vers l'espace de création de l'album
-            return;
-        }
-    await Album.create({//Si un nom à été mis sauvegarde du nom de l'album
-        title:req.body.albumTitle//Envoie a la bdd le nom de l'album
-    });
 
-    res.redirect('/albums');//Redirection vers les albums
-    }catch(err){//Gestion des erreur autres
-        req.flash('error','Erreur lors de la création de l\'album')
-        res.redirect('/albums/create');
-
-    };
-};
-//Gestion de la page de création de formulaire
-const createAlbumForm = (req,res)=>{
-    
-    res.render('new-album',//Nommage de la route
-        {title: "Nouvel Album",//Title de l'html
-         error: req.flash('error')//Affichage en cas d'erreur
-        });
-    
-};
 //Récuperation de l'id de l'album
 const album = async (req,res)=>{
     try{
     const idAlbum = req.params.id ;//Récuperation de l'id de l'album
     const album = await Album.findById(idAlbum);//Récuperation de l'album par son id
+
     console.log(album)//Affichage de l'album
+
     res.render('album',{//Rendu pour la page ejs
         title:album.title,//Affichage du title html
         album,//Récuperation du nom de l'album
-        error:req.flash('error'),//Gestion de l'erreur 
+        
     });
 }catch(err){//Gestion des erreurs en cas de probleme avec un id album
     console.log(err);//Affichage dans la console de l'erreur
