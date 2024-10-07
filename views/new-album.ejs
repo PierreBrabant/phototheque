@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+<body>
+    <%-include('partials/nav')%>
+
+
+    <div class="container">
+        <div class="row mt-4">
+            <div class="col">
+                <h1>Nouvel Album</h1>
+            </div>
+        </div>
+    
+        <div id="row">
+            <div id="col">
+                <form action="/albums/create" method="post">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input class="form-control" type="text"name="albumTitle" placeholder="Titre du nouvel album" autofocus>
+                    </div>
+                    <!--Affichage de l'erreur en cas de probleme avec le nom de l'album(album non nommé, nom d'album deja utilisé)-->
+                    <% if(error.length){%>
+                    <div class="alert alert-danger mt-4 mb-2" role="alert">
+                        <%=error[0]%>
+                    </div>
+                    <%}%>
+                    <button type="submit" class="btn btn-success mt-4">Envoyer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <%-include('partials/script')%>
+</body>
+</html>
