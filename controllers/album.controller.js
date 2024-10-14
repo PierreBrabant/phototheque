@@ -1,6 +1,7 @@
 const Album = require('../models/Album');
 const path = require("path");
 const fs = require('fs')
+const rimraf = require('rimraf')
 //Redirection de la page Albums
 const albums = async (req,res)=>{
     const albums = await Album.find();//Récuperation des albums
@@ -73,19 +74,37 @@ const addImageToAlbum = async (req,res)=>{
 
 //Suppression d'une image
 const deleteImageToAlbum = async (req,res)=>{
-    const idAlbum = req.params.id;
-    const album = await Album.findById(idAlbum)
+    const idAlbum = req.params.id;//Recuperation de l'id de l'album
+    const album = await Album.findById(idAlbum);//Recuperation de l'id de l'album dans mongoose
+    const imageIdx = req.params.imageIdx;//Récuperation de l'id de l'image dans le tableau 
+    const image = album.images[imageIdx];//assignation de l'id de l'image 
 
-    const imgName = image.name;
-    const folderPath = path.join(__dirname,'../public/upload',idAlbum);
-    fs.rmdir(folderPath,{recursive:true});
-    album.images.splice(imgName)
-    await album.save();
-    res.redirect(`/albums/${idAlbum}`);
+    if(!image){//On verifie si l'image existe
+        res.redirect(`albums/${idAlbum}`);
+        return;
+    }
 
+    const folderPath = path.join(__dirname,'../public/upload',idAlbum,image);//Récuperation du chemin de l'image
+    fs.unlinkSync(folderPath,{recursive:true});//Suppression de l'image dans les fichiers
+    album.images.splice(imageIdx);//Suppression de l'id dans mongoose
 
+    await album.save();//Sauvegarde des modifications faites dans la bdd
+
+    res.redirect(`/albums/${idAlbum}`);//Redirection à la page album
 }
 
+//Suppression de l'album
+const deleteAlbum = async(req,res)=>{
+    const idAlbum = req.params.id;
+    const folderPath = path.join(__dirname,'../public/upload',idAlbum);
+    rimraf(folderPath,()=>{
+        res.redirect('/album')
+    });
+    await Album.findByIdAndDelete(idAlbum)
+    
+    res.redirect('/albums');
+
+}
 //Page d'erreur
 const error = (req,res)=>{
     res.render('pageerror',{title:"Erreur 404"});//Mise ne place de la page d'erreur
@@ -120,5 +139,5 @@ module.exports = {
     createAlbum,
     addImageToAlbum,
     deleteImageToAlbum,
-    
+    deleteAlbum,
 };

@@ -16,7 +16,9 @@ router.get('/albumsCreate',albumController.createAlbumForm);
 //Envoie du formulaire dans la BDD
 router.post('/albumsCreates',albumController.createAlbum);
 //Supprimer une image 
-router.post('/albums/delete/:id',albumController.deleteImageToAlbum);
+router.get('/albums/:id/delete/:imageIdx',albumController.deleteImageToAlbum);
+//Suppression de l'album
+router.get('/albums/:id/delete',albumController.deleteAlbum)
 
 
 module.exports=router;

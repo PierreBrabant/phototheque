@@ -22,7 +22,7 @@
                             <!-- Envoie de l'id dans l'url et affichage dans l'url du nom de l'album -->
                             <a href="/albums/<%=album._id%>"><%=album.title%></a>
                             
-                            <a class="link-link badge bg-danger rounded-pill" href="#">Supprimer</a>
+                            <a class="link-link badge bg-danger rounded-pill" href="/albums/<%=album._id%>/delete">Supprimer</a>
                         </li>
                     <%});%>
                     
